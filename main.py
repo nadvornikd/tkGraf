@@ -30,7 +30,7 @@ class MyEntry(tk.Entry):
 
 class Application(tk.Tk):
     name = basename(splitext(basename(__file__.capitalize()))[0])
-    name = "Fooo"
+    name = "tkGraf"
 
     def __init__(self):
         super().__init__(className=self.name)
@@ -39,49 +39,49 @@ class Application(tk.Tk):
         self.lbl = tk.Label(self, text="tkGraf")
         self.lbl.pack()
 
-        self.fileFrame = tk.LabelFrame(self, text="soubor")
+        self.fileFrame = tk.LabelFrame(self, text="File")
         self.fileFrame.pack(padx=5, pady=5, fill="x")
         self.fileEntry = MyEntry(self.fileFrame)
         self.fileEntry.pack(fill="x")
         self.fileBtn = tk.Button(self.fileFrame, text="...",command=self.fileSelect)
         self.fileBtn.pack(anchor="e")
 
-        self.dataformatVar = tk.StringVar(value="RADEK")
+        self.dataformatVar = tk.StringVar(value="ROW")
         self.radkyRbtn = tk.Radiobutton(
             self.fileFrame, 
-            text = "data jsou v radcich", 
+            text = "data are in rows", 
             variable=self.dataformatVar, 
-            value="RADEK",
+            value="ROW",
         )
         self.radkyRbtn.pack(anchor="w")
         self.sloupceRbtn = tk.Radiobutton(
             self.fileFrame, 
-            text="data jsou ve sloupcich", 
+            text="data are in columns", 
             variable=self.dataformatVar, 
-            value="SLOUPEC",
+            value="COLUMN",
         )
         self.sloupceRbtn.pack(anchor="w")
 
         self.grafFrame = tk.LabelFrame(self, text="Graf")
         self.grafFrame.pack(fill="x")
-        tk.Label(self.grafFrame, text="Titulek").grid(row=0, column=0)
+        tk.Label(self.grafFrame, text="Title").grid(row=0, column=0)
         self.titleEntry = MyEntry(self.grafFrame)
         self.titleEntry.grid(row=0, column=1, columnspan=2)
 
-        tk.Label(self.grafFrame, text="Popisek x").grid(row=1, column=0)
+        tk.Label(self.grafFrame, text="Label x").grid(row=1, column=0)
         self.xlabelEntry = MyEntry(self.grafFrame)
         self.xlabelEntry.grid(row=1, column=1, columnspan=2)
 
-        tk.Label(self.grafFrame, text="Popisek y").grid(row=2, column=0)
+        tk.Label(self.grafFrame, text="Label y").grid(row=2, column=0)
         self.ylabelEntry = MyEntry(self.grafFrame)
         self.ylabelEntry.grid(row=2, column=1, columnspan=2)
 
-        tk.Label(self.grafFrame, text="Mrizka").grid(row=3, column=0)
+        tk.Label(self.grafFrame, text="Grid").grid(row=3, column=0)
         self.gridVar = tk.BooleanVar(value=False)
         self.gridCheck = tk.Checkbutton(self.grafFrame, variable=self.gridVar)
         self.gridCheck.grid(row=3, column=1, sticky="w")
 
-        tk.Label(self.grafFrame, text="Styl cary").grid(row=4, column=0)    
+        tk.Label(self.grafFrame, text="Line style").grid(row=4, column=0)    
         self.lineVar = tk.StringVar(value="None")
         self.lineOpp = tk.OptionMenu(self.grafFrame, self.lineVar, "None", "-", "--", "-.", ":")
         self.lineOpp.grid(row=4,column=1,sticky="w")
@@ -99,10 +99,22 @@ class Application(tk.Tk):
         self.mcolorOpp = tk.OptionMenu(self.grafFrame, self.mcolorVar, "Black", "Green", "Red", "Blue", "Pink")
         self.mcolorOpp.grid(row=5,column=2,sticky="w")
 
-        tk.Button(self,text="Kreslit", command=self.plotgraph).pack(anchor="w")
+        tk.Button(self,text="Print", command=self.plotgraph).pack(anchor="w")
 
         self.btn = tk.Button(self, text="Quit", command=self.quit)
         self.btn.pack(anchor="e")
+
+        #Menu
+        self.mainMenu = tk.Menu(self)
+        self.fileMenu = tk.Menu(self.mainMenu)
+
+        #Soubor
+        self.fileMenu.add_command(label="Open", command=self.fileSelect)
+        self.fileMenu.add_command(label="Print", command=self.plotgraph)
+        self.fileMenu.add_command(label="Quit", command=self.quit)
+        self.mainMenu.add_cascade(label="File", menu=self.fileMenu)
+
+        self.config(menu=self.mainMenu)
 
     def fileSelect(self):
         self.filename = filedialog.askopenfilename()
@@ -110,12 +122,12 @@ class Application(tk.Tk):
 
     def plotgraph(self):
         with open(self.filename, "r") as f:
-            if self.dataformatVar.get() == "RADEK":
+            if self.dataformatVar.get() == "ROW":
                 x = f.readline().split()
                 y = f.readline().split()
                 x = [float(i.replace(",",".")) for i in x]
                 y = [float(i.replace(",",".")) for i in y]
-            elif self.dataformatVar.get() == "SLOUPEC":
+            elif self.dataformatVar.get() == "COLUMN":
                 x = []
                 y = []
                 while True:
