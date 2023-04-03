@@ -111,8 +111,8 @@ class Application(tk.Tk):
     def plotgraph(self):
         with open(self.filename, "r") as f:
             if self.dataformatVar.get() == "RADEK":
-                x = f.readline().split(";")
-                y = f.readline().split(";")
+                x = f.readline().split()
+                y = f.readline().split()
                 x = [float(i.replace(",",".")) for i in x]
                 y = [float(i.replace(",",".")) for i in y]
             elif self.dataformatVar.get() == "SLOUPEC":
@@ -122,7 +122,7 @@ class Application(tk.Tk):
                     line = f.readline()
                     if line == "":
                         break
-                    x1, y1 = line.split(";")
+                    x1, y1 = line.split()
                     x1 = float(x1.replace(",","."))
                     y1 = float(y1.replace(",","."))
                     x.append(x1)
